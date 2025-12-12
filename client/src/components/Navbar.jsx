@@ -2,19 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import OnluyenLogo from '../assets/logo_new.svg';
 
-// 🔥 Lấy token + username thật từ localStorage
 const useAuth = () => {
-    const token = localStorage.getItem('token');
-    const username = localStorage.getItem('username'); // 👈 Lấy tên người dùng
-
     return {
-        isLoggedIn: !!token,
-        userName: username || 'Người Dùng'
+        isLoggedIn: !!localStorage.getItem('token'),
+        userName: localStorage.getItem('username') || 'Người Dùng',
+        role: localStorage.getItem('role') || 'user'
     };
 };
 
 export default function Navbar() {
-    const { isLoggedIn, userName } = useAuth();
+    const { isLoggedIn, userName, role } = useAuth();
     const navigate = useNavigate();
 
     const [scrolled, setScrolled] = useState(false);
@@ -22,15 +19,13 @@ export default function Navbar() {
     const [lastScrollY, setLastScrollY] = useState(0);
 
     const handleLogout = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('username'); // 👈 Xóa tên khỏi localStorage
+        localStorage.clear();
         navigate('/');
     };
 
     useEffect(() => {
         const handleScroll = () => {
             const currentScrollY = window.scrollY;
-
             setScrolled(currentScrollY > 50);
 
             if (currentScrollY > lastScrollY && currentScrollY > 100) {
@@ -53,15 +48,7 @@ export default function Navbar() {
                     <img src={OnluyenLogo} alt="Onluyen Logo" className="navbar-logo" />
                 </Link>
 
-                <button 
-                    className="navbar-toggler" 
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navMenu"
-                    aria-controls="navMenu"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation"
-                >
+                <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
                     <span className="navbar-toggler-icon"></span>
                 </button>
 
@@ -71,6 +58,15 @@ export default function Navbar() {
                         <li className="nav-item"><Link className="nav-link" to="/kythi">Kỳ thi</Link></li>
                         <li className="nav-item"><Link className="nav-link" to="/hocphi">Học phí</Link></li>
                         <li className="nav-item"><Link className="nav-link" to="/flashcard">Flashcard</Link></li>
+
+
+                        {role === "admin" && (
+                            <li className="nav-item">
+                                <Link className="nav-link text-warning fw-bold" to="/admin/posts">
+                                    Quản lý bài viết
+                                </Link>
+                            </li>
+                        )}
                     </ul>
 
                     <div className="d-flex ms-3 align-items-center">

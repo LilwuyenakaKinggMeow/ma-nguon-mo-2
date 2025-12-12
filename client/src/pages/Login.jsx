@@ -29,11 +29,14 @@ export default function LoginPage() {
         password,
       });
 
-      // Lưu token
+      // ⭐ Lưu token
       localStorage.setItem("token", res.data.token);
 
-      // Lưu tên hiển thị
+      // ⭐ Lưu username
       localStorage.setItem("username", res.data.user.name);
+
+      // ⭐ LƯU ROLE - QUAN TRỌNG
+      localStorage.setItem("role", res.data.user.role);
 
       axios.defaults.headers.common["Authorization"] = `Bearer ${res.data.token}`;
 
@@ -42,7 +45,7 @@ export default function LoginPage() {
       setIsError(true);
       setError(
         err.response?.data?.message ||
-        "Đăng nhập thất bại. Vui lòng kiểm tra Email/Mật khẩu."
+          "Đăng nhập thất bại. Vui lòng kiểm tra Email/Mật khẩu."
       );
     }
   };
@@ -56,9 +59,7 @@ export default function LoginPage() {
         <h2 className="text-center mb-4 fw-bold text-dark">Đăng nhập</h2>
 
         {redirectMsg && (
-          <div className="alert alert-warning text-center" role="alert">
-            {redirectMsg}
-          </div>
+          <div className="alert alert-warning text-center my-2">{redirectMsg}</div>
         )}
 
         {error && (
@@ -66,7 +67,6 @@ export default function LoginPage() {
             className={`alert ${
               isError ? "alert-danger" : "alert-success"
             } text-center`}
-            role="alert"
           >
             {error}
           </div>
@@ -81,7 +81,7 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              placeholder="VD: example@onluyen.vn"
+              placeholder="VD: example@gmail.com"
             />
           </div>
 
